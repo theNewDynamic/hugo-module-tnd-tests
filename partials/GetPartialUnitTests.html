@@ -1,0 +1,21 @@
+{{ $partial := . }}
+{{ $tests := slice }}
+{{ $partialDir := printf "tnd-tests/partials/%s" $partial }}
+{{ range $index := seq 10 }}
+  {{ $test := false }}
+  {{ $partialContext := print "tnd-tests/partials/" $partial "/" $index "/context.html" }}
+  {{ $partialExpected := print "tnd-tests/partials/" $partial "/" $index "/expected.html" }}
+  {{ $exists := templates.Exists (print "partials/" $partialContext) }}
+  {{ $exists = and $exists (templates.Exists (print "partials/" $partialExpected)) }}
+  {{ if $exists }}
+    {{ $expectedOutput := partial $partialExpected "partialExpected" }}
+    {{ $context := partial $partialContext "partialContext" }}
+    {{ $result := partial $partial $context }}
+    {{ if eq $expectedOutput $result }}
+      {{ $test = true }}
+    {{ end }}
+    {{ $tests = $tests | append (dict "index" $index "test" $test "partial" $partial "context" $context "expected" $expectedOutput) }}
+  {{ end }}
+{{ end }}
+
+{{ return $tests }}

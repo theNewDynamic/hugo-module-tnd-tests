@@ -1,10 +1,6 @@
-This is a template repo. To start.
+# TND Tests Hugo Module
 
-search `{moduleName}` through the project and replace it with the module identifier (ex: `socials` for `hugo-module-tnd-socials`)
-
-# {moduleName} Hugo Module
-
-(intro)
+A simple repo to run unit tests on TND Module features. For now it only tests partials.
 
 ## Requirements
 
@@ -27,33 +23,54 @@ Configure your project's module to import this module:
 # config.yaml
 module:
   imports:
-  - path: github.com/theNewDynamic/hugo-module-tnd-{moduleName}
+  - path: github.com/theNewDynamic/hugo-module-tnd-tests
 ```
 
 ## Usage
 
-### Some Partial/Feature
+Each partials to be tested can count as many as 10 unit tests, each sporting a different context and expected returned value.
 
-#### Examples
+### Directory Structure.
 
-### Settings
+To create unit test on a given partial located or mounted in `layouts/partials/images/GetFeatureImage.html`
+User should create two partials per unit tests:
+1. `layouts/partials/tnd-tests/partials/images/GetFeaturedImage/1/context.html`
+  The above should return the context to be passed to the partial for the unit test number 1
+2. `layouts/partials/tnd-tests/partials/images/Add/1/GetFeaturedImage/excpected.html`
+  The above should return the expected value returned by the partial when aforementioned context is passed.
 
-Settings are added to the project's parameter under the `tnd_{moduleName}` map as shown below.
+#### GetFeaturedImage unit test 1
 
-```yaml
-# config.yaml
-params:
-  tnd_{moduleName}:
-    [...]
+```
+{{/* layouts/partials/tnd-tests/partials/images/GetFeaturedImage/1/context.html */}}
+{{ return site.GetPage "/post/monaco" }}
 ```
 
-#### Configure Key 1
+```
+{{/* layouts/partials/tnd-tests/partials/images/GetFeaturedImage/1/expected.html */}}
+{{ return "/uploads/grand-prix.jpg" }}
+```
 
-#### Configure Key 2
+#### GetFeaturedImage unit test 2
+```
+{{/* layouts/partials/tnd-tests/partials/images/GetFeaturedImage/1/context.html */}}
+{{ return site.GetPage "/post/san-francisco" }}
+```
 
-#### Defaults
+```
+{{/* layouts/partials/tnd-tests/partials/images/GetFeaturedImage/1/expected.html */}}
+{{ return "/uploads/golden-gate.jpg" }}
+```
 
-ld copy/paste the above to your settings and append with new extensions.
+### Some Partial/Feature
+
+#### GetPartialUnitTests
+
+This will return an array of the results and data of every unit tests of a given partial.
+
+#### testPartial
+
+This will return a boolean. True if every unit tests of a given partial succeeds, false if one or more fails.
 
 ## theNewDynamic
 

@@ -1,0 +1,11 @@
+
+{{ $return := true }}
+{{ range partialCached "tnd-tests/GetPartialUnitTests" . . }}
+  {{ if not .test }}
+    {{ $return = false }}
+  {{ end }}
+{{ else }}
+  {{ $return = false }}
+{{ end }}
+
+{{ return $return }}
