@@ -5,12 +5,17 @@
   {{ $test := false }}
   {{ $partialContext := print "tnd-tests/partials/" $partial "/" $index "/context.html" }}
   {{ $partialExpected := print "tnd-tests/partials/" $partial "/" $index "/expected.html" }}
+  {{ $partialTransform := print "tnd-tests/partials/" $partial "/" $index "/transform.html" }}
   {{ $exists := templates.Exists (print "partials/" $partialContext) }}
+  {{ $transformExist := templates.Exists (print "partials/" $partialTransform) }}
   {{ $exists = and $exists (templates.Exists (print "partials/" $partialExpected)) }}
   {{ if $exists }}
     {{ $expectedOutput := partial $partialExpected "partialExpected" }}
     {{ $context := partial $partialContext "partialContext" }}
     {{ $result := partial $partial $context }}
+    {{ with $transformExist }}
+      {{ $result = partial $partialTransform $result }}
+    {{ end }}
     {{ if eq $expectedOutput $result }}
       {{ $test = true }}
     {{ end }}
